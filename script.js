@@ -1,3 +1,4 @@
+// Load all games from games.json
 fetch("games.json")
   .then(res => res.json())
   .then(games => {
@@ -17,6 +18,7 @@ fetch("games.json")
     });
   });
 
+// Search bar filter
 document.getElementById("search").addEventListener("input", e => {
   const term = e.target.value.toLowerCase();
   document.querySelectorAll(".game-card").forEach(card => {
