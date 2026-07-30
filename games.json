@@ -1,10 +1,5 @@
 [
   {
-    "name": "Drive Mad",
-    "slug": "drive-mad",
-    "thumbnail": "assets/thumbnails/drive-mad.jpg"
-  },
-  {
     "name": "Run 3",
     "slug": "run-3",
     "thumbnail": "assets/thumbnails/run-3.jpg"
@@ -13,5 +8,10 @@
     "name": "Moto X3M",
     "slug": "moto-x3m",
     "thumbnail": "assets/thumbnails/moto-x3m.jpg"
+  },
+  {
+    "name": "Drive Mad",
+    "slug": "drive-mad",
+    "thumbnail": "assets/thumbnails/drive-mad.jpg"
   }
 ]
