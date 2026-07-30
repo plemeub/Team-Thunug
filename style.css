@@ -79,12 +79,12 @@ h2 {
   box-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
 }
 
-/* PARTICLE BASE STYLE */
+/* PARTICLES */
 .game-card::before,
 .game-card::after,
-.game-card .particle1,
-.game-card .particle2,
-.game-card .particle3 {
+.game-card .p1,
+.game-card .p2,
+.game-card .p3 {
   content: "";
   position: absolute;
   width: 14px;
@@ -94,86 +94,65 @@ h2 {
   border: 2px solid black;
   opacity: 0;
   pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-/* PARTICLE POSITIONS */
-.game-card::before { top: 50%; left: 50%; }
-.game-card::after { top: 50%; left: 50%; }
-
-.game-card .particle1 { top: 50%; left: 50%; }
-.game-card .particle2 { top: 50%; left: 50%; }
-.game-card .particle3 { top: 50%; left: 50%; }
-
-/* HOVER ANIMATIONS — particles fly outward */
+/* Hover triggers */
 .game-card:hover::before {
-  animation: fly-up-left 0.7s ease-out forwards;
-  opacity: 1;
+  animation: explode-up-left 0.7s ease-out forwards;
 }
 
 .game-card:hover::after {
-  animation: fly-up-right 0.7s ease-out forwards;
-  opacity: 1;
+  animation: explode-up-right 0.7s ease-out forwards;
 }
 
-.game-card:hover .particle1 {
-  animation: fly-down-left 0.7s ease-out forwards;
-  opacity: 1;
+.game-card:hover .p1 {
+  animation: explode-down-left 0.7s ease-out forwards;
 }
 
-.game-card:hover .particle2 {
-  animation: fly-down-right 0.7s ease-out forwards;
-  opacity: 1;
+.game-card:hover .p2 {
+  animation: explode-down-right 0.7s ease-out forwards;
 }
 
-.game-card:hover .particle3 {
-  animation: fly-up 0.7s ease-out forwards;
-  opacity: 1;
+.game-card:hover .p3 {
+  animation: explode-up 0.7s ease-out forwards;
 }
 
-/* KEYFRAMES — directions */
-@keyframes fly-up-left {
-  from { transform: translate(0,0); opacity: 1; }
-  to { transform: translate(-40px, -40px); opacity: 0; }
+/* Explosion directions */
+@keyframes explode-up-left {
+  from { transform: translate(-50%, -50%); opacity: 1; }
+  to { transform: translate(-120%, -140%); opacity: 0; }
 }
 
-@keyframes fly-up-right {
-  from { transform: translate(0,0); opacity: 1; }
-  to { transform: translate(40px, -40px); opacity: 0; }
+@keyframes explode-up-right {
+  from { transform: translate(-50%, -50%); opacity: 1; }
+  to { transform: translate(40%, -140%); opacity: 0; }
 }
 
-@keyframes fly-down-left {
-  from { transform: translate(0,0); opacity: 1; }
-  to { transform: translate(-40px, 40px); opacity: 0; }
+@keyframes explode-down-left {
+  from { transform: translate(-50%, -50%); opacity: 1; }
+  to { transform: translate(-120%, 40%); opacity: 0; }
 }
 
-@keyframes fly-down-right {
-  from { transform: translate(0,0); opacity: 1; }
-  to { transform: translate(40px, 40px); opacity: 0; }
+@keyframes explode-down-right {
+  from { transform: translate(-50%, -50%); opacity: 1; }
+  to { transform: translate(40%, 40%); opacity: 0; }
 }
 
-@keyframes fly-up {
-  from { transform: translate(0,0); opacity: 1; }
-  to { transform: translate(0, -50px); opacity: 0; }
+@keyframes explode-up {
+  from { transform: translate(-50%, -50%); opacity: 1; }
+  to { transform: translate(-50%, -160%); opacity: 0; }
 }
-⭐ One tiny HTML change needed
-To support the extra particles, add these inside each card in your JS, like this:
 
-In script.js, change this:
-js
-card.innerHTML = `
-  <img src="${game.thumbnail}" alt="${game.name}">
-  <p>${game.name}</p>
-`;
-To this:
-js
-card.innerHTML = `
-  <img src="${game.thumbnail}" alt="${game.name}">
-  <p>${game.name}</p>
-
-  <span class="particle1"></span>
-  <span class="particle2"></span>
-  <span class="particle3"></span>
-`;
+/* Game Card Image */
+.game-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
 
 /* Footer */
 footer {
@@ -182,4 +161,3 @@ footer {
   margin-top: 50px;
   color: #666;
   font-size: 14px;
-}
