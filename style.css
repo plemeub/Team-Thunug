@@ -36,7 +36,7 @@ header h1 {
 }
 
 #search:focus {
-  border-color: #007bff;
+  border-color: #ff0000;
   outline: none;
 }
 
@@ -59,6 +59,7 @@ h2 {
   gap: 25px;
 }
 
+/* Game Card */
 .game-card {
   background: #ffffff;
   border-radius: 14px;
@@ -68,13 +69,61 @@ h2 {
   color: #222;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Red glow on hover */
 .game-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
 }
 
+/* Floating balls (pseudo-elements) */
+.game-card::before,
+.game-card::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid black;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ball positions */
+.game-card::before {
+  top: 20%;
+  left: 10%;
+}
+
+.game-card::after {
+  bottom: 15%;
+  right: 8%;
+}
+
+/* Show + animate balls on hover */
+.game-card:hover::before,
+.game-card:hover::after {
+  opacity: 1;
+  animation: float-ball 0.8s ease-out forwards;
+}
+
+/* Floating animation */
+@keyframes float-ball {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-25px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Game Card Image */
 .game-card img {
   width: 100%;
   height: 150px;
