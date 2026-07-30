@@ -1,2 +1,2 @@
 # Team-Thunug
-Importion
+https://plemeub.github.io/Team-Thunug/
