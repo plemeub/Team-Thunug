@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: #111;
+  padding: 20px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.game-frame {
+  width: 100vw;
+  height: calc(100vh - 80px);
+  border: none;
+}
