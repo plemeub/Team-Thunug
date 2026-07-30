@@ -1,4 +1,4 @@
-// Load all games from games.json
+// Load games
 fetch("games.json")
   .then(res => res.json())
   .then(games => {
@@ -14,16 +14,16 @@ fetch("games.json")
         <p>${game.name}</p>
       `;
 
-      // Add particle explosion on hover
+      // Particle explosion on hover
       card.addEventListener("mouseenter", () => {
-        createParticles(card);
+        explodeParticles(card);
       });
 
       list.appendChild(card);
     });
   });
 
-// Search bar filter
+// Search filter
 document.getElementById("search").addEventListener("input", e => {
   const term = e.target.value.toLowerCase();
   document.querySelectorAll(".game-card").forEach(card => {
@@ -32,13 +32,13 @@ document.getElementById("search").addEventListener("input", e => {
   });
 });
 
-// PARTICLE EXPLOSION FUNCTION
-function createParticles(card) {
-  for (let i = 0; i < 15; i++) {
+// Particle explosion function
+function explodeParticles(card) {
+  for (let i = 0; i < 20; i++) {
     const particle = document.createElement("span");
     particle.className = "particle";
 
-    // Random starting position inside the card
+    // Random start position inside card
     const x = Math.random() * card.offsetWidth;
     const y = Math.random() * card.offsetHeight;
 
@@ -47,14 +47,14 @@ function createParticles(card) {
 
     card.appendChild(particle);
 
-    // Random outward direction
+    // Random direction
     const angle = Math.random() * Math.PI * 2;
-    const distance = 60 + Math.random() * 40;
+    const distance = 60 + Math.random() * 60;
 
     const dx = Math.cos(angle) * distance;
     const dy = Math.sin(angle) * distance;
 
-    // Animate particle
+    // Animate
     particle.animate(
       [
         { transform: "translate(0, 0)", opacity: 1 },
@@ -66,7 +66,7 @@ function createParticles(card) {
       }
     );
 
-    // Remove particle after animation
+    // Remove after animation
     setTimeout(() => particle.remove(), 700);
   }
 }
