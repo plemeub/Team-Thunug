@@ -70,7 +70,7 @@ h2 {
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: transform 0.25s, box-shadow 0.25s;
   position: relative;
-  overflow: visible; /* allow particles to fly out */
+  overflow: visible; /* allow particles to fly outward */
 }
 
 /* Red glow on hover */
@@ -79,71 +79,16 @@ h2 {
   box-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
 }
 
-/* PARTICLES */
-.game-card::before,
-.game-card::after,
-.game-card .p1,
-.game-card .p2,
-.game-card .p3 {
-  content: "";
+/* Particle style (JS-generated) */
+.particle {
   position: absolute;
   width: 14px;
   height: 14px;
-  border-radius: 50%;
   background: white;
   border: 2px solid black;
-  opacity: 0;
+  border-radius: 50%;
   pointer-events: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Hover triggers */
-.game-card:hover::before {
-  animation: explode-up-left 0.7s ease-out forwards;
-}
-
-.game-card:hover::after {
-  animation: explode-up-right 0.7s ease-out forwards;
-}
-
-.game-card:hover .p1 {
-  animation: explode-down-left 0.7s ease-out forwards;
-}
-
-.game-card:hover .p2 {
-  animation: explode-down-right 0.7s ease-out forwards;
-}
-
-.game-card:hover .p3 {
-  animation: explode-up 0.7s ease-out forwards;
-}
-
-/* Explosion directions */
-@keyframes explode-up-left {
-  from { transform: translate(-50%, -50%); opacity: 1; }
-  to { transform: translate(-120%, -140%); opacity: 0; }
-}
-
-@keyframes explode-up-right {
-  from { transform: translate(-50%, -50%); opacity: 1; }
-  to { transform: translate(40%, -140%); opacity: 0; }
-}
-
-@keyframes explode-down-left {
-  from { transform: translate(-50%, -50%); opacity: 1; }
-  to { transform: translate(-120%, 40%); opacity: 0; }
-}
-
-@keyframes explode-down-right {
-  from { transform: translate(-50%, -50%); opacity: 1; }
-  to { transform: translate(40%, 40%); opacity: 0; }
-}
-
-@keyframes explode-up {
-  from { transform: translate(-50%, -50%); opacity: 1; }
-  to { transform: translate(-50%, -160%); opacity: 0; }
+  opacity: 0; /* animation will fade it in/out */
 }
 
 /* Game Card Image */
@@ -161,12 +106,4 @@ footer {
   margin-top: 50px;
   color: #666;
   font-size: 14px;
-  .particle {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: white;
-  border: 2px solid black;
-  border-radius: 50%;
-  pointer-events: none;
 }
