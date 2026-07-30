@@ -9,15 +9,15 @@ fetch("games.json")
       card.className = "game-card";
       card.href = `games/${game.slug}/`;
 
-      // Card content including particles
       card.innerHTML = `
         <img src="${game.thumbnail}" alt="${game.name}">
         <p>${game.name}</p>
-
-        <span class="p1"></span>
-        <span class="p2"></span>
-        <span class="p3"></span>
       `;
+
+      // Add particle explosion on hover
+      card.addEventListener("mouseenter", () => {
+        createParticles(card);
+      });
 
       list.appendChild(card);
     });
@@ -31,3 +31,55 @@ document.getElementById("search").addEventListener("input", e => {
     card.style.display = name.includes(term) ? "" : "none";
   });
 });
+
+// PARTICLE EXPLOSION FUNCTION
+function createParticles(card) {
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement("span");
+    particle.className = "particle";
+
+    // Random starting position inside the card
+    const x = Math.random() * card.offsetWidth;
+    const y = Math.random() * card.offsetHeight;
+
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+
+    card.appendChild(particle);
+
+    // Random outward direction
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 60 + Math.random() * 40;
+
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+
+    // Animate particle
+    particle.animate(
+      [
+        { transform: "translate(0, 0)", opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }
+      ],
+      {
+        duration: 700,
+        easing: "ease-out"
+      }
+    );
+
+    // Remove particle after animation
+    setTimeout(() => particle.remove(), 700);
+  }
+}
+⭐ Add this to your style.css (particles style)
+Put this anywhere in your CSS:
+
+css
+.particle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+  pointer-events: none;
+}
