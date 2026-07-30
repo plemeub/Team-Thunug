@@ -8,13 +8,13 @@ canvas.height = window.innerHeight;
 let player = {
   x: 0,
   y: 0,
-  size: 20,
+  size: 22,
   vx: 0,
   vy: 0,
-  speed: 4,
-  gravity: 0.4,
-  jumpStrength: 8,
-  onGround: false
+  speed: 0.12,
+  jump: 0.35,
+  gravity: 0.002,
+  grounded: false
 };
 
 // Controls
@@ -22,137 +22,124 @@ let keys = {};
 document.addEventListener("keydown", e => keys[e.key] = true);
 document.addEventListener("keyup", e => keys[e.key] = false);
 
-// Tunnel + level
+// Tunnel tiles
 let tiles = [];
-const tileSize = 40;
+const tileRadius = 180;
+const tileWidth = 50;
+const tileHeight = 20;
+const tileCount = 24;
+
+// Rotation + gravity
+let rotation = 0;
+let gravityAngle = Math.PI / 2;
+
+// Level
 let level = 1;
-let rotation = 0;          // global tunnel rotation
-let gravityAngle = Math.PI / 2; // default: down
 
 function createLevel() {
   tiles = [];
-  const radius = 150;
-  const segments = 24;
 
-  for (let i = 0; i < segments; i++) {
-    const angle = (i / segments) * Math.PI * 2;
-    const hole = Math.random() < 0.2; // 20% chance of hole
+  for (let i = 0; i < tileCount; i++) {
+    const angle = (i / tileCount) * Math.PI * 2;
     tiles.push({
       angle,
-      radius,
-      hole,
-      falling: Math.random() < 0.15, // 15% chance of falling tile
+      hole: Math.random() < 0.2,
+      falling: Math.random() < 0.15,
       active: true
     });
   }
 
-  // Place player on one tile
-  const startTile = tiles[0];
-  const px = Math.cos(startTile.angle) * startTile.radius;
-  const py = Math.sin(startTile.angle) * startTile.radius;
+  const start = tiles[0];
+  const px = Math.cos(start.angle) * tileRadius;
+  const py = Math.sin(start.angle) * tileRadius;
+
   player.x = px;
   player.y = py;
   player.vx = 0;
   player.vy = 0;
-  gravityAngle = startTile.angle + Math.PI / 2;
+
+  gravityAngle = start.angle + Math.PI / 2;
 }
 
 createLevel();
 
-function rotateVector(x, y, angle) {
-  const cos = Math.cos(angle);
-  const sin = Math.sin(angle);
-  return {
-    x: x * cos - y * sin,
-    y: x * sin + y * cos
-  };
-}
-
 function update() {
-  // Rotate tunnel slowly
   rotation += 0.01;
 
-  // Movement relative to gravity
-  const moveDir = gravityAngle - Math.PI / 2; // tangent direction
-  let moveX = Math.cos(moveDir);
-  let moveY = Math.sin(moveDir);
-
-  player.vx *= 0.9;
-  player.vy *= 0.9;
+  const tangent = gravityAngle - Math.PI / 2;
+  const tx = Math.cos(tangent);
+  const ty = Math.sin(tangent);
 
   if (keys["ArrowLeft"]) {
-    player.vx -= moveX * player.speed * 0.2;
-    player.vy -= moveY * player.speed * 0.2;
+    player.vx -= tx * player.speed;
+    player.vy -= ty * player.speed;
   }
   if (keys["ArrowRight"]) {
-    player.vx += moveX * player.speed * 0.2;
-    player.vy += moveY * player.speed * 0.2;
+    player.vx += tx * player.speed;
+    player.vy += ty * player.speed;
   }
 
-  // Jump
-  if (keys["ArrowUp"] && player.onGround) {
-    player.vx -= Math.cos(gravityAngle) * player.jumpStrength;
-    player.vy -= Math.sin(gravityAngle) * player.jumpStrength;
-    player.onGround = false;
+  if (keys["ArrowUp"] && player.grounded) {
+    player.vx -= Math.cos(gravityAngle) * player.jump;
+    player.vy -= Math.sin(gravityAngle) * player.jump;
+    player.grounded = false;
   }
 
-  // Gravity
   player.vx += Math.cos(gravityAngle) * player.gravity;
   player.vy += Math.sin(gravityAngle) * player.gravity;
 
-  // Apply movement
   player.x += player.vx;
   player.y += player.vy;
 
-  // Check tiles
-  player.onGround = false;
-  let closestTile = null;
+  player.grounded = false;
+  let closest = null;
   let closestDist = Infinity;
 
   tiles.forEach(tile => {
     if (!tile.active || tile.hole) return;
 
-    const tx = Math.cos(tile.angle + rotation) * tile.radius;
-    const ty = Math.sin(tile.angle + rotation) * tile.radius;
+    const angle = tile.angle + rotation;
+    const tx = Math.cos(angle) * tileRadius;
+    const ty = Math.sin(angle) * tileRadius;
 
     const dx = player.x - tx;
     const dy = player.y - ty;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist < tileSize && dist < closestDist) {
+    if (dist < tileWidth && dist < closestDist) {
       closestDist = dist;
-      closestTile = tile;
+      closest = tile;
     }
   });
 
-  if (closestTile) {
-    // Snap player to tile surface
-    const tx = Math.cos(closestTile.angle + rotation) * closestTile.radius;
-    const ty = Math.sin(closestTile.angle + rotation) * closestTile.radius;
+  if (closest) {
+    const angle = closest.angle + rotation;
+    const tx = Math.cos(angle) * tileRadius;
+    const ty = Math.sin(angle) * tileRadius;
 
-    const nx = player.x - tx;
-    const ny = player.y - ty;
-    const nd = Math.sqrt(nx * nx + ny * ny) || 1;
-    const ux = nx / nd;
-    const uy = ny / nd;
+    const dx = player.x - tx;
+    const dy = player.y - ty;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-    const targetDist = tileSize / 2;
-    player.x = tx + ux * targetDist;
-    player.y = ty + uy * targetDist;
+    const nx = dx / dist;
+    const ny = dy / dist;
 
-    // Align gravity to tile normal
-    gravityAngle = Math.atan2(uy, ux);
+    const targetDist = tileHeight;
+    player.x = tx + nx * targetDist;
+    player.y = ty + ny * targetDist;
 
-    // Grounded
-    player.onGround = true;
+    gravityAngle = Math.atan2(ny, nx);
 
-    // Falling tile
-    if (closestTile.falling) {
-      closestTile.active = false;
+    player.vx *= 0.8;
+    player.vy *= 0.8;
+
+    player.grounded = true;
+
+    if (closest.falling) {
+      closest.active = false;
     }
   }
 
-  // If player falls too far from center, reset level
   const centerDist = Math.sqrt(player.x * player.x + player.y * player.y);
   if (centerDist > 600) {
     level++;
@@ -170,42 +157,35 @@ function draw() {
   ctx.save();
   ctx.translate(canvas.width / 2, canvas.height / 2);
 
-  // Draw tunnel tiles
   tiles.forEach(tile => {
     const angle = tile.angle + rotation;
-    const tx = Math.cos(angle) * tile.radius;
-    const ty = Math.sin(angle) * tile.radius;
+    const tx = Math.cos(angle) * tileRadius;
+    const ty = Math.sin(angle) * tileRadius;
 
     ctx.save();
     ctx.translate(tx, ty);
     ctx.rotate(angle + Math.PI / 2);
 
-    if (!tile.active) {
-      ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-    } else if (tile.hole) {
-      ctx.fillStyle = "black";
-    } else if (tile.falling) {
-      ctx.fillStyle = "#ff8800";
-    } else {
-      ctx.fillStyle = "#ffffff";
-    }
+    if (!tile.active) ctx.fillStyle = "rgba(255,255,255,0.1)";
+    else if (tile.hole) ctx.fillStyle = "black";
+    else if (tile.falling) ctx.fillStyle = "#ff8800";
+    else ctx.fillStyle = "white";
 
-    ctx.fillRect(-tileSize / 2, -tileSize / 4, tileSize, tileSize / 2);
+    ctx.fillRect(-tileWidth / 2, -tileHeight / 2, tileWidth, tileHeight);
     ctx.restore();
   });
 
-  // Draw player
   ctx.save();
   ctx.translate(player.x, player.y);
   ctx.fillStyle = "#00ffff";
   ctx.fillRect(-player.size / 2, -player.size / 2, player.size, player.size);
   ctx.restore();
 
-  // HUD
   ctx.restore();
+
   ctx.fillStyle = "white";
   ctx.font = "20px Arial";
-  ctx.fillText("Level: " + level, 20, 30);
+  ctx.fillText("Level " + level, 20, 30);
 }
 
 update();
