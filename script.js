@@ -70,16 +70,3 @@ function createParticles(card) {
     setTimeout(() => particle.remove(), 700);
   }
 }
-⭐ Add this to your style.css (particles style)
-Put this anywhere in your CSS:
-
-css
-.particle {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: white;
-  border: 2px solid black;
-  border-radius: 50%;
-  pointer-events: none;
-}
