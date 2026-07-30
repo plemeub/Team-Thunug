@@ -1,13 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Game Site</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Thunug</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome!</h1>
 
-    <a href="games/game1/">
-        <button>Play Game 1</button>
-    </a>
+    <header>
+        <h1>🎮 Team Thunug</h1>
+
+        <input
+            type="text"
+            id="searchBar"
+            placeholder="Search games..."
+        >
+    </header>
+
+    <main>
+
+        <section class="featured">
+
+            <h2>Featured Games</h2>
+
+            <div class="game-grid">
+
+                <a class="game-card" href="games/drivemad/">
+                    <img src="https://placehold.co/300x170" alt="Drive Mad">
+                    <h3>Drive Mad</h3>
+                </a>
+
+                <a class="game-card" href="games/run3/">
+                    <img src="https://placehold.co/300x170" alt="Run 3">
+                    <h3>Run 3</h3>
+                </a>
+
+                <a class="game-card" href="games/motox3m/">
+                    <img src="https://placehold.co/300x170" alt="Moto X3M">
+                    <h3>Moto X3M</h3>
+                </a>
+
+            </div>
+
+        </section>
+
+        <section>
+
+            <h2>All Games</h2>
+
+            <div class="game-grid" id="gameGrid">
+
+                <!-- More games go here -->
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Team Thunug</p>
+    </footer>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
