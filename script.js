@@ -9,9 +9,14 @@ fetch("games.json")
       card.className = "game-card";
       card.href = `games/${game.slug}/`;
 
+      // Card content including particles
       card.innerHTML = `
         <img src="${game.thumbnail}" alt="${game.name}">
         <p>${game.name}</p>
+
+        <span class="p1"></span>
+        <span class="p2"></span>
+        <span class="p3"></span>
       `;
 
       list.appendChild(card);
